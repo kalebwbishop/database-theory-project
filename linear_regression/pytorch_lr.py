@@ -4,8 +4,8 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 
 # Load the data
-X = pd.read_csv("covid_data_features.csv")
-y = pd.read_csv("covid_data_target.csv")
+X = pd.read_csv("covid_features.csv")
+y = pd.read_csv("covid_target.csv")
 
 # Split data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -36,3 +36,6 @@ with torch.no_grad():
     predictions = model(X_test)
     mse = criterion(predictions, y_test)
 print("Mean Squared Error:", mse.item())
+
+rmse = torch.sqrt(mse)
+print("Root Mean Squared Error:", rmse.item())

@@ -1,7 +1,0 @@
-*.pkl
-*.dml
-*.csv
-*.csv.mtd
-
-!/tests/input_X.*
-!/tests/input_Y.*

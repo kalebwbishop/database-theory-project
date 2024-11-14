@@ -3,3 +3,8 @@ torch
 scikit-learn
 pandas
 systemds
+h5py
+librosa
+opencv-python
+torchvision
+transformers
