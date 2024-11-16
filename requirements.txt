@@ -8,3 +8,4 @@ librosa
 opencv-python
 torchvision
 transformers
+psutil

@@ -1,2 +1,3 @@
 venv
-covid**.csv
+laptop**.csv
+__pycache__

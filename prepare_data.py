@@ -1,30 +1,23 @@
 import pandas as pd
 
 # Load dataset with Pandas
-data = pd.read_csv("covid_data.csv")
+data = pd.read_csv("laptop_data.csv")
 
 # Define target and exclude non-feature columns
-target = 'total_cases'
-non_feature_columns = ['iso_code', 'continent', 'location', 'date', 'total_cases']
+target = 'Price (Euro)'
+non_feature_columns = [target]
 
-# Extract features by excluding non-feature columns and the target
+# Separate features and target
 features = data.columns.difference(non_feature_columns)
-
-# Separate the data
 X = data[features]
 y = data[target]
 
-print(data.shape)
-print(X.shape)
-print(y.shape)
+# Identify categorical columns
+categorical_cols = X.select_dtypes(include=['object']).columns
 
-# Remove non-numeric columns from features
-X = X.select_dtypes(include=['float64', 'int64'])
-
-# Fill missing values for numeric columns
-X.fillna(X.mean(), inplace=True)
-y.fillna(y.mean(), inplace=True)
+# Apply one-hot encoding with integer dtype (1s and 0s)
+X_encoded = pd.get_dummies(X, columns=categorical_cols, dtype=int)
 
 # Save to CSV
-X.to_csv("covid_features.csv", index=False, header=True)
-y.to_csv("covid_target.csv", index=False, header=True)
+X_encoded.to_csv("laptop_features.csv", index=False, header=True)
+y.to_csv("laptop_target.csv", index=False, header=True)
