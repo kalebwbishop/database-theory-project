@@ -1,131 +1,97 @@
 import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from sklearn.compose import ColumnTransformer
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
-from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_absolute_error
+import time
+import shutil
 
-# Load the dataset from CSV
-data = pd.read_csv('laptop_data.csv')  # Replace 'your_data.csv' with the path to your CSV file
+from system_logging import SystemLogging
 
-# Define features and target
-X = data.drop('Price (Euro)', axis=1)
-y = data['Price (Euro)'].values
+def run_pytorch_lr(system_logging):
+    starttime = time.time()
+    endtime = 0
 
-# Preprocessing pipeline for numerical and categorical data
-numerical_features = ['Inches', 'CPU_Frequency (GHz)', 'RAM (GB)', 'Weight (kg)']
-categorical_features = ['Company', 'Product', 'TypeName', 'ScreenResolution', 'CPU_Company', 'CPU_Type', 
-                        'Memory', 'GPU_Company', 'GPU_Type', 'OpSys']
+    try:
+        # Load data
+        X = pd.read_csv("laptop_features.csv").values  # Convert to NumPy array
+        y = pd.read_csv("laptop_target.csv").values.flatten()  # Flatten to 1D array
 
-numerical_transformer = StandardScaler()
-categorical_transformer = OneHotEncoder(handle_unknown='ignore')
+        loop_start = time.time()
+        while loop_start + 15 > time.time():
+            # Split the data
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-preprocessor = ColumnTransformer(
-    transformers=[
-        ('num', numerical_transformer, numerical_features),
-        ('cat', categorical_transformer, categorical_features)
-    ])
+            # Convert to PyTorch tensors
+            X_train_tensor = torch.tensor(X_train, dtype=torch.float32)
+            X_test_tensor = torch.tensor(X_test, dtype=torch.float32)
+            y_train_tensor = torch.tensor(y_train, dtype=torch.float32).view(-1, 1)
+            y_test_tensor = torch.tensor(y_test, dtype=torch.float32).view(-1, 1)
 
-# Split the data
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+            # Create DataLoader for training and testing
+            train_dataset = TensorDataset(X_train_tensor, y_train_tensor)
+            test_dataset = TensorDataset(X_test_tensor, y_test_tensor)
+            train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+            test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
-# Preprocess and fit the data
-X_train = preprocessor.fit_transform(X_train).toarray()
-X_test = preprocessor.transform(X_test).toarray()
+            # Define the model
+            model = nn.Linear(X_train.shape[1], 1)
+            criterion = nn.MSELoss()
+            optimizer = optim.Adam(model.parameters(), lr=0.01)
 
-# Convert to PyTorch tensors
-X_train_tensor = torch.tensor(X_train, dtype=torch.float32)
-X_test_tensor = torch.tensor(X_test, dtype=torch.float32)
-y_train_tensor = torch.tensor(y_train, dtype=torch.float32).view(-1, 1)
-y_test_tensor = torch.tensor(y_test, dtype=torch.float32).view(-1, 1)
+            # Training loop
+            num_epochs = 100
+            for epoch in range(num_epochs):
+                model.train()
+                train_loss = 0.0
+                for X_batch, y_batch in train_loader:
+                    optimizer.zero_grad()
+                    predictions = model(X_batch)
+                    loss = criterion(predictions, y_batch)
+                    loss.backward()
+                    optimizer.step()
+                    train_loss += loss.item() * X_batch.size(0)
+                train_loss /= len(train_loader.dataset)
 
-# Create DataLoader for training and testing
-train_dataset = TensorDataset(X_train_tensor, y_train_tensor)
-test_dataset = TensorDataset(X_test_tensor, y_test_tensor)
+            # Evaluation
+            model.eval()
+            with torch.no_grad():
+                y_pred_tensor = model(X_test_tensor)
+                y_pred = y_pred_tensor.numpy().flatten()
+                y_test = y_test_tensor.numpy().flatten()
 
-train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+            mse = criterion(torch.tensor(y_pred).view(-1, 1), torch.tensor(y_test).view(-1, 1)).item()
+            rmse = mse ** 0.5
+            mae = mean_absolute_error(y_test, y_pred)
+            r2 = r2_score(y_test, y_pred)
 
-# Define the neural network model
-class PricePredictionModel(nn.Module):
-    def __init__(self, input_size):
-        super(PricePredictionModel, self).__init__()
-        self.fc1 = nn.Linear(input_size, 128)
-        self.fc2 = nn.Linear(128, 64)
-        self.fc3 = nn.Linear(64, 32)
-        self.output = nn.Linear(32, 1)
-        self.dropout = nn.Dropout(0.2)
-    
-    def forward(self, x):
-        x = torch.relu(self.fc1(x))
-        x = self.dropout(x)
-        x = torch.relu(self.fc2(x))
-        x = self.dropout(x)
-        x = torch.relu(self.fc3(x))
-        x = self.output(x)
-        return x
+            if endtime == 0:
+                endtime = time.time()
 
-# Initialize model, loss function, and optimizer
-input_size = X_train.shape[1]
-model = PricePredictionModel(input_size)
-criterion = nn.MSELoss()
-optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-# Training loop
-num_epochs = 100
-early_stopping_patience = 8
-best_loss = float('inf')
-early_stop_counter = 0
+        system_logging.write_output(f"Mean Squared Error (MSE): {mse}")
+        system_logging.write_output(f"Mean Absolute Error (MAE): {mae}")
+        system_logging.write_output(f"Root Mean Squared Error (RMSE): {rmse}")
+        system_logging.write_output(f"R² (Coefficient of Determination): {r2}")
 
-for epoch in range(num_epochs):
-    model.train()
-    train_loss = 0.0
-    for X_batch, y_batch in train_loader:
-        optimizer.zero_grad()
-        predictions = model(X_batch)
-        loss = criterion(predictions, y_batch)
-        loss.backward()
-        optimizer.step()
-        train_loss += loss.item() * X_batch.size(0)
-    train_loss /= len(train_loader.dataset)
+    except Exception as e:
+        system_logging.write_output(f"Error: {str(e)}")
+    finally:
+        exec_time = endtime - starttime
+        system_logging.write_output(f"Execution Time: {exec_time}")
 
-    # Validation
-    model.eval()
-    with torch.no_grad():
-        val_loss = 0.0
-        for X_batch, y_batch in test_loader:
-            predictions = model(X_batch)
-            loss = criterion(predictions, y_batch)
-            val_loss += loss.item() * X_batch.size(0)
-        val_loss /= len(test_loader.dataset)
 
-    print(f"Epoch {epoch+1}/{num_epochs}, Training Loss: {train_loss:.4f}, Validation Loss: {val_loss:.4f}")
+if __name__ == "__main__":
+    ml_system = "pytorch"
 
-    # Early stopping
-    if val_loss < best_loss:
-        best_loss = val_loss
-        early_stop_counter = 0
-        best_model_state = model.state_dict()
-    else:
-        early_stop_counter += 1
-        if early_stop_counter >= early_stopping_patience:
-            print("Early stopping")
-            model.load_state_dict(best_model_state)
-            break
+    pytorch_logging = SystemLogging(ml_system)
+    pytorch_logging.start_logging()
+    run_pytorch_lr(pytorch_logging)
+    pytorch_logging.stop_logging()
 
-# Evaluation
-model.eval()
-with torch.no_grad():
-    y_pred_tensor = model(X_test_tensor)
-    y_pred = y_pred_tensor.numpy().flatten()
-    y_test = y_test_tensor.numpy().flatten()
+    source = f'/tmp/local_logs/{ml_system}.log'
+    destination = f'./local_logs/{ml_system}.log'
 
-mae = mean_absolute_error(y_test, y_pred)
-mape = mean_absolute_percentage_error(y_test, y_pred) * 100
-
-print(f'Mean Absolute Error on test set: {mae:.2f} Euros')
-print(f'Mean Absolute Percentage Error on test set: {mape:.2f}%')
+    shutil.copy(source, destination)

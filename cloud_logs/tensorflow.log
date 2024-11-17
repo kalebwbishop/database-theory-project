@@ -1,0 +1,20 @@
+System Usage Log
+System Usage - CPU: 56.20%, Memory: 0.60%, Disk: 0.00%
+System Usage - CPU: 68.80%, Memory: 0.70%, Disk: 0.00%
+System Usage - CPU: 68.20%, Memory: 0.70%, Disk: 0.00%
+System Usage - CPU: 50.40%, Memory: 1.20%, Disk: 0.00%
+System Usage - CPU: 68.50%, Memory: 1.20%, Disk: 0.00%
+System Usage - CPU: 69.30%, Memory: 1.20%, Disk: 0.00%
+System Usage - CPU: 65.30%, Memory: 1.70%, Disk: 0.00%
+System Usage - CPU: 70.70%, Memory: 1.70%, Disk: 0.00%
+System Usage - CPU: 29.50%, Memory: 1.70%, Disk: 0.00%
+
+Mean Squared Error (MSE): 420540.0625
+
+Mean Absolute Error (MAE): 447.996826171875
+
+Root Mean Squared Error (RMSE): 648.4906005859375
+
+R² (Coefficient of Determination): 0.15271658050202463
+
+Execution Time: 6.503051519393921
