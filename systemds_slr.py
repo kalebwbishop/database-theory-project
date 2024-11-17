@@ -61,7 +61,7 @@ def run_systemds_lr(system_logging):
 
 
 if __name__ == "__main__":
-    ml_system = "systemds"
+    ml_system = "systemds_simple"
 
     systemds_logging = SystemLogging(ml_system)
     systemds_logging.start_logging()
