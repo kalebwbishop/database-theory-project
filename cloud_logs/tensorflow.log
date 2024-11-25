@@ -1,20 +1,21 @@
 System Usage Log
-System Usage - CPU: 56.20%, Memory: 0.60%, Disk: 0.00%
-System Usage - CPU: 68.80%, Memory: 0.70%, Disk: 0.00%
-System Usage - CPU: 68.20%, Memory: 0.70%, Disk: 0.00%
-System Usage - CPU: 50.40%, Memory: 1.20%, Disk: 0.00%
-System Usage - CPU: 68.50%, Memory: 1.20%, Disk: 0.00%
-System Usage - CPU: 69.30%, Memory: 1.20%, Disk: 0.00%
-System Usage - CPU: 65.30%, Memory: 1.70%, Disk: 0.00%
-System Usage - CPU: 70.70%, Memory: 1.70%, Disk: 0.00%
-System Usage - CPU: 29.50%, Memory: 1.70%, Disk: 0.00%
+System Usage - CPU: 12.02%, Memory: 0.40%, Disk: 0.00%
+System Usage - CPU: 8.42%, Memory: 0.60%, Disk: 0.00%
+System Usage - CPU: 64.62%, Memory: 0.60%, Disk: 0.00%
+System Usage - CPU: 63.32%, Memory: 0.70%, Disk: 0.00%
+System Usage - CPU: 62.82%, Memory: 1.20%, Disk: 0.00%
+System Usage - CPU: 66.22%, Memory: 1.30%, Disk: 0.00%
+System Usage - CPU: 26.82%, Memory: 1.30%, Disk: 0.00%
+System Usage - CPU: 63.52%, Memory: 1.70%, Disk: 0.00%
+System Usage - CPU: 66.02%, Memory: 1.70%, Disk: 0.00%
+System Usage - CPU: 17.72%, Memory: 1.70%, Disk: 0.00%
 
-Mean Squared Error (MSE): 420540.0625
+Mean Squared Error (MSE): 420563.625
 
-Mean Absolute Error (MAE): 447.996826171875
+Mean Absolute Error (MAE): 447.9937438964844
 
-Root Mean Squared Error (RMSE): 648.4906005859375
+Root Mean Squared Error (RMSE): 648.5087890625
 
-R² (Coefficient of Determination): 0.15271658050202463
+R² (Coefficient of Determination): 0.15266905036841638
 
-Execution Time: 6.503051519393921
+Execution Time: 7.645096063613892

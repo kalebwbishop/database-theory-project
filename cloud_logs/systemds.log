@@ -1,13 +1,15 @@
 System Usage Log
-System Usage - CPU: 85.62%, Memory: 0.80%, Disk: 0.00%
-System Usage - CPU: 51.62%, Memory: 1.40%, Disk: 0.00%
-System Usage - CPU: 95.62%, Memory: 3.70%, Disk: 0.00%
-System Usage - CPU: 82.12%, Memory: 4.10%, Disk: 0.00%
-System Usage - CPU: 94.62%, Memory: 4.00%, Disk: 0.00%
-System Usage - CPU: 64.42%, Memory: 4.70%, Disk: 0.00%
-System Usage - CPU: 72.02%, Memory: 4.00%, Disk: 0.00%
-System Usage - CPU: 69.12%, Memory: 4.60%, Disk: 0.00%
-System Usage - CPU: 82.02%, Memory: 4.70%, Disk: 0.00%
+System Usage - CPU: 12.54%, Memory: 0.20%, Disk: 0.00%
+System Usage - CPU: 19.34%, Memory: 0.40%, Disk: 0.00%
+System Usage - CPU: 49.54%, Memory: 0.70%, Disk: 0.00%
+System Usage - CPU: 38.44%, Memory: 1.10%, Disk: 0.00%
+System Usage - CPU: 87.04%, Memory: 2.20%, Disk: 0.00%
+System Usage - CPU: 62.54%, Memory: 2.60%, Disk: 0.00%
+System Usage - CPU: 90.54%, Memory: 4.20%, Disk: 0.00%
+System Usage - CPU: 68.14%, Memory: 4.50%, Disk: 0.00%
+System Usage - CPU: 69.94%, Memory: 4.20%, Disk: 0.00%
+System Usage - CPU: 71.34%, Memory: 3.80%, Disk: 0.00%
+System Usage - CPU: 67.44%, Memory: 3.70%, Disk: 0.00%
 
 Mean Squared Error (MSE): 1003103.0409
 
@@ -17,5 +19,5 @@ Root Mean Squared Error (RMSE): 1001.5503
 
 R² (Coefficient of Determination): 0.8198
 
-Execution Time: 4.86 seconds
-System Usage - CPU: 48.42%, Memory: 0.10%, Disk: 0.00%
+Execution Time: 5.31 seconds
+System Usage - CPU: 10.74%, Memory: 0.00%, Disk: 0.00%
